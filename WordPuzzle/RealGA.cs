@@ -23,11 +23,12 @@ namespace WordPuzzle
         public static int nPop = 80;
         public static double pc = .8;
         public static double pm = 1;
+        public static double mu=0.01;   
         public static double MulticastDelegate=.8;
         public static double beta = 8;
         public static double nm = Math.Round(pm * nPop);
         public static int nc = 2* (int)Math.Round(pc * nPop / 2);
-        
+        public People bestSol;
 
 
         // initilze
@@ -60,15 +61,16 @@ namespace WordPuzzle
             {
                  child = this.SinglePointCrossOver(parent1, parent2);
             }
-            if (myrandom > 2 && myrandom <= 4)
+            if (myrandom > 5 && myrandom <= 10)
             {
                 child = this.DoublePointCrossOver(parent1, parent2);
             }
-            if (myrandom > 4)
+            if (myrandom > 11)
             {
                 child = this.UniformPointCrossOver(parent1, parent2);
             }
             // childs= SingleCrossOver(People parent1, People parent2)
+            
             child[0].cost = puzzle.CalCostFunction(_tableWords, child[0].postion);
             child[1].cost = puzzle.CalCostFunction(_tableWords, child[1].postion);
             return child;
@@ -79,10 +81,10 @@ namespace WordPuzzle
         {
             Random rnd = new Random();
             int randomPlace = rnd.Next(1, 16);
-            People[] childs = new People[1];
-            int[] childPosition1=new int[16];
-            int[] childPosition2= new int[16];
-            for (int i = 0; i <= 15; i++)
+            People[] childs = new People[2];
+            int[] childPosition1=new int[17];
+            int[] childPosition2= new int[17];
+            for (int i = 1; i <= 16; i++)
             {
                 if (i<= randomPlace)
                 {
@@ -150,10 +152,10 @@ namespace WordPuzzle
             Random rnd = new Random();
            // int[] randomNumbers=new int[16];
             People[] childs = new People[2];
-            int[] childPosition1 = new int[16];
-            int[] childPosition2 = new int[16];
+            int[] childPosition1 = new int[17];
+            int[] childPosition2 = new int[17];
             double myRandom;
-            for (int i = 0; i < 16; i++)
+            for (int i = 1; i <=16; i++)
             {
                 myRandom = rnd.NextDouble();
                 if (myRandom >= 0.5)
@@ -177,11 +179,11 @@ namespace WordPuzzle
         private People[] DoublePointCrossOver(People parent1, People parent2)
         {
             Random rnd = new Random();
-            int randomPlace = rnd.Next(1, 16);
-            People[] childs = new People[1];
-            int[] childPosition1 = new int[16];
-            int[] childPosition2 = new int[16];
-            for (int i = 0; i <= 15; i++)
+            int randomPlace = rnd.Next(17);
+            People[] childs = new People[2];
+            int[] childPosition1 = new int[17];
+            int[] childPosition2 = new int[17];
+            for (int i = 1; i <= 16; i++)
             {
                 if (i <= randomPlace)
                 {
@@ -193,12 +195,9 @@ namespace WordPuzzle
                     childPosition2[i] = parent1.postion[i];
                     childPosition1[i] = parent2.postion[i];
                 }
-                childs[0].postion = childPosition1;
-                childs[1].postion = childPosition2;
-                return childs;
-
-
             }
+            childs[0].postion = childPosition1;
+            childs[1].postion = childPosition2;
             return childs;
         }
         private People Mutate(double mu, People selectedPeople)
@@ -217,15 +216,35 @@ namespace WordPuzzle
             mutatePeople.postion = result;
             return mutatePeople;
         }
-        private void DoGA()
+        private int RouletWheel(double[] p)
         {
-            //first Generation
-            for (int i = 1; i <= 20; i++)
+            Random rnd = new Random();
+            double r= rnd.NextDouble();
+            double sum = 0;
+            for (int i = 0; i < nPop; i++)
             {
-                People myPeople = new People();
+
+                if (r <= sum) return i;
+                sum += p[i];
+            }
+
+            int result = 0;
+
+
+
+            return result;
+        }
+        public void DoGA()
+        {
+            People myPeople = new People();
+            //first Generation
+            for (int i = 1; i <= nPop; i++)
+            {
+                
                 int[] postion=CreateRandomString();
                 myPeople.postion = postion;
                 myPeople.cost =puzzle.CalCostFunction(_tableWords, postion);
+                pop.Add(myPeople);
             }
             pop = pop.OrderBy(o => o.cost).ToList();
             worstCost = pop[pop.Count - 1].cost;
@@ -234,25 +253,65 @@ namespace WordPuzzle
             for (int it = 0; it < maxIt; it++)
             {
                 //        % Calculate Selection Probabilities
-                //P = exp(-beta * Costs / WorstCost);
-                //P = P / sum(P);
+                double totalCost = this.pop.Sum(item => item.cost);
+                double sum = 0;
+
+                double[] p = new double[nPop];
+                for (int i = 0; i < nPop; i++)
+                {
+                    p[i] = Math.Pow(2.718283, (-1 * beta * pop[i].cost / worstCost));
+                    sum += p[i];
+                }
+                for (int i = 0; i < nPop; i++) p[i] /= sum;
+                popc.Clear();
                 for (int k = 1; k <= nc/2; k++)
                 {
                     //select paretn indices
-                    //int i1 = 0;
-                    //int i2 = 0;
+                    int i1 = RouletWheel(p);
+                    int i2 = RouletWheel(p);
+                    People parrrent1 = pop[2 * k - 1];
+                    People[] crossOverChild = CrossOver(pop[2 * k - 1], pop[2 * k]);
+                    //popc[2 * k - 1] = crossOverChild[0];
+                    popc.Add( crossOverChild[0]);
+                    popc.Add( crossOverChild[1]);
+
                 }
+
+                //mutation
+                popm.Clear();
+                for (int i = 0; i <= nm; i++)
+                {
+                    Random nmRand = new Random();
+                    int myRandom = nmRand.Next(nPop);
+                    popm.Add(Mutate(mu, pop[myRandom]));
+                }
+                var newpop = pop.Concat(popc)
+                                    .Concat(popm)
+                                    .ToList();
+
+                // re order pop
+                newpop = newpop.OrderBy(o => o.cost).ToList();
+                pop = newpop;
+                worstCost = GetMax(worstCost, pop[pop.Count - 1].cost);
+                pop.RemoveRange(nPop, (int)(nm + nc));
+                bestSol = pop[0];
+                Console.WriteLine(bestSol.cost);
+
 
             }
 
         }
+        public static int GetMax(int first, int second)
+        {
+            return first > second ? first : second;
+        }
         public RealGA(List<ArrayList> words)
         {
             _tableWords = words;
-            maxIt =200;
-            nPop = 80;
-            pc = .8;
-            pm = 1;
+            maxIt =1000;
+            nPop = 100;
+            pc = .9;
+            pm = 3;
             MulticastDelegate = .8;
             beta = 8;
             nm = Math.Round(pm * nPop);

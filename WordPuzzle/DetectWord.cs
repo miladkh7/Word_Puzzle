@@ -27,6 +27,7 @@ namespace WordPuzzle
         public static int currentPlace;
         public static void ReadyToUse()
         {
+            currentPlace = 0;
             wordFindIndex =0;
             usedPlaces.Clear();
             findedWord.Clear();
@@ -85,7 +86,7 @@ namespace WordPuzzle
             return IsFind;
 
         }
-        private void InitilizeNeighbors()
+        public void InitilizeNeighbors()
         {
             
             cells[0].neghbors= new int[] {0,0,0};

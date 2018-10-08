@@ -109,9 +109,9 @@ namespace WordPuzzle
             #region MyRegion
             // TestWord("نگخفرپاباشردگقعک");
             // string inputWord = ("پرگار");
-            // string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
+             string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
             // int[] testPuzzle = { 0,29, 26, 9 ,23, 12, 3, 1, 2, 1, 16, 12, 10, 26 ,24, 21, 25 };
-            // List<ArrayList> myWords2=ReadFile(inputFileName);
+             List<ArrayList> myWords2=ReadFile(inputFileName);
             //  DisplayAllWord(myWords2);
             // Console.WriteLine("results");
             // FindListInPuzzle(myWords2, testPuzzle);
@@ -137,10 +137,12 @@ namespace WordPuzzle
             #endregion
 
             #region Ga Test
-            RealGA.CreateRandomString().ToString();
-            Console.Read();
+            //RealGA.CreateRandomString().ToString();
+            //Console.Read();
             #endregion
-
+            RealGA myGa = new RealGA(myWords2);
+            myGa.DoGA();
+            Console.Read();
 
 
         }
