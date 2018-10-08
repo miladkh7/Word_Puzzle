@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using WordPuzzle;
 namespace WordPuzzle
 {
+   
     public  struct cell
     {
         public int[] neghbors;
@@ -27,6 +29,7 @@ namespace WordPuzzle
         {
             wordFindIndex =0;
             usedPlaces.Clear();
+            findedWord.Clear();
             level = 1;
             domain.Clear();
 
@@ -50,27 +53,29 @@ namespace WordPuzzle
                 usedPlaces.Add(currentPlace);
 
                 domain = currentNegibor.FindAll(i => !usedPlaces.Contains(i));
-                 //   sl.FindAll(i => !s2.Contains(i))
+                 
             }
             level++;
             foreach (var selectedPlace in domain)
             {
                 if (IsFind)
                 {
-                    Console.WriteLine("we find word");
+                    //Console.WriteLine("we find word");
                     return true;  
                 }
                 if (wordFindIndex >= wordCode.Count)
                 {
+                    
                     findedWord = usedPlaces;
                     IsFind = true;
+                    //Console.WriteLine("we find word");
                     return true;
                 }
                 if (puzzle[selectedPlace].ToString()==wordCode[wordFindIndex].ToString())
                 {
                     currentPlace = selectedPlace;
                     wordFindIndex++;
-                    return FindCodeInPuzzle(wordCode,puzzle);
+                    FindCodeInPuzzle(wordCode,puzzle);
 
                 }
                
@@ -132,10 +137,7 @@ namespace WordPuzzle
             InitilizeNeighbors();
             ReadyToUse();
             InitilizeSamplePuzzle();
-            DisplaySampleWord();
-            
-
-
+            //DisplaySampleWord();
     }
 
     }
