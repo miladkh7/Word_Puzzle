@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.IO;
 namespace WordPuzzle
 {
     
@@ -19,7 +20,7 @@ namespace WordPuzzle
       //  public People[] childs = new People[1];
         
         //Ga Parameters
-        public static int maxIt=200;
+        public static int maxIt=1000;
         public static int nPop = 80;
         public static double pc = .8;
         public static double pm = 1;
@@ -46,8 +47,8 @@ namespace WordPuzzle
             for (int i = 1; i < 17; i++)
             {
                 myRandomString[i] = rnd.Next(1, 33);
-                Console.Write(myRandomString[i].ToString());
-                Console.Write(" ");
+               // Console.Write(myRandomString[i].ToString());
+             //   Console.Write(" ");
             }
             return myRandomString;
         }
@@ -61,11 +62,11 @@ namespace WordPuzzle
             {
                  child = this.SinglePointCrossOver(parent1, parent2);
             }
-            if (myrandom > 5 && myrandom <= 10)
+            if (myrandom > 2 && myrandom <= 4)
             {
                 child = this.DoublePointCrossOver(parent1, parent2);
             }
-            if (myrandom > 11)
+            if (myrandom > 4)
             {
                 child = this.UniformPointCrossOver(parent1, parent2);
             }
@@ -80,7 +81,7 @@ namespace WordPuzzle
         private People[] SinglePointCrossOver(People parent1,People parent2)
         {
             Random rnd = new Random();
-            int randomPlace = rnd.Next(1, 16);
+            int randomPlace = rnd.Next(16);
             People[] childs = new People[2];
             int[] childPosition1=new int[17];
             int[] childPosition2= new int[17];
@@ -96,12 +97,13 @@ namespace WordPuzzle
                     childPosition2[i] = parent1.postion[i];
                     childPosition1[i] = parent2.postion[i];
                 }
-                childs[0].postion = childPosition1;
-                childs[1].postion = childPosition2;
-                return childs;
+
 
 
             }
+            childs[0].postion = childPosition1;
+            childs[1].postion = childPosition2;
+           
             return childs;
         }
 
@@ -204,7 +206,7 @@ namespace WordPuzzle
         {
             Random rnd = new Random();
             People mutatePeople = selectedPeople;
-            int[] result = new int[16];
+            int[] result = new int[17];
             int numberOfMutation = (int) Math.Ceiling(mu * 16);
             for (int i = 0; i <= numberOfMutation; i++)
             {
@@ -234,7 +236,7 @@ namespace WordPuzzle
 
             return result;
         }
-        public void DoGA()
+        public void DoGA(string saveFileName)
         {
             People myPeople = new People();
             //first Generation
@@ -242,6 +244,11 @@ namespace WordPuzzle
             {
                 
                 int[] postion=CreateRandomString();
+                if (postion.Length == 16)
+                {
+                    Console.WriteLine("error on length");
+                }
+
                 myPeople.postion = postion;
                 myPeople.cost =puzzle.CalCostFunction(_tableWords, postion);
                 pop.Add(myPeople);
@@ -270,7 +277,11 @@ namespace WordPuzzle
                     int i1 = RouletWheel(p);
                     int i2 = RouletWheel(p);
                     People parrrent1 = pop[2 * k - 1];
-                    People[] crossOverChild = CrossOver(pop[2 * k - 1], pop[2 * k]);
+                    if (parrrent1.postion.Length==16)
+                    {
+                        Console.WriteLine("error on lenght2");
+                    }
+                    People[] crossOverChild = CrossOver(pop[2 * k - 2], pop[2 * k-1]);
                     //popc[2 * k - 1] = crossOverChild[0];
                     popc.Add( crossOverChild[0]);
                     popc.Add( crossOverChild[1]);
@@ -295,11 +306,43 @@ namespace WordPuzzle
                 worstCost = GetMax(worstCost, pop[pop.Count - 1].cost);
                 pop.RemoveRange(nPop, (int)(nm + nc));
                 bestSol = pop[0];
-                Console.WriteLine(bestSol.cost);
+//#ToDo: aval baresi konam agar fili bod pakesh konam
 
+                using (StreamWriter writetext = new StreamWriter(saveFileName, append: true))
+                {
+                    Console.WriteLine(string.Format("in iteration {0} / {1} : number of word found in table is  {2}", it+1, maxIt, 100 - bestSol.cost));
+                    writetext.WriteLine(string.Format("in iteration {0} / {1} : number of word found in table is  {2}", it+1, maxIt, 100 - bestSol.cost));
+                    for (int i = 1; i <= 16; i++)
+                    {
+                        Console.Write(bestSol.postion[i]);
+                        Console.Write(" ");
+                        writetext.Write(bestSol.postion[i]);
+                        writetext.Write(" ");
+                    }
+
+                    Console.WriteLine();
+                    writetext.WriteLine();
+                    Console.WriteLine("***************");
+                    writetext.WriteLine("*************");
+
+                }
+
+                    //for (int i = 1; i <=16; i++)
+                    //{
+                    //    Console.Write(bestSol.postion[i]);
+                    //    Console.Write(" ");
+                    //}
+                    //foreach (var ch in bestSol.postion)
+                    //{
+                    //    Console.Write(ch);
+                    //    Console.Write(" ");
+                    //}
+                    Console.WriteLine();
+                
 
             }
 
+            Console.WriteLine("finish");
         }
         public static int GetMax(int first, int second)
         {
@@ -308,10 +351,10 @@ namespace WordPuzzle
         public RealGA(List<ArrayList> words)
         {
             _tableWords = words;
-            maxIt =1000;
-            nPop = 100;
-            pc = .9;
-            pm = 3;
+            maxIt =5;
+            nPop = 400;
+            pc = .8;
+            pm = 20;
             MulticastDelegate = .8;
             beta = 8;
             nm = Math.Round(pm * nPop);
