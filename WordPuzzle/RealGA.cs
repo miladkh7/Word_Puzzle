@@ -238,6 +238,7 @@ namespace WordPuzzle
         }
         public void DoGA(string saveFileName)
         {
+            Console.WriteLine(Properties.Settings.Default.nPop.ToString());
             People myPeople = new People();
             //first Generation
             for (int i = 1; i <= nPop; i++)
@@ -350,11 +351,13 @@ namespace WordPuzzle
         }
         public RealGA(List<ArrayList> words)
         {
+            //load Seetins
             _tableWords = words;
-            maxIt =5;
-            nPop = 400;
-            pc = .8;
-            pm = 20;
+            maxIt = Properties.Settings.Default.maxIt;
+            nPop = Properties.Settings.Default.nPop;
+            pc = Properties.Settings.Default.pc;
+            pm = Properties.Settings.Default.pm;
+            mu = Properties.Settings.Default.mu;
             MulticastDelegate = .8;
             beta = 8;
             nm = Math.Round(pm * nPop);

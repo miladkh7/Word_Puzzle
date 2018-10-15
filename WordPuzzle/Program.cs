@@ -12,8 +12,10 @@ namespace WordPuzzle
         public ArrayList wordCode;
         public List<int> positions;
     }
+
     class puzzle
     {
+        public static string  inputFileName;
         public static List<findedWordInTable> findedList = new List<findedWordInTable>();
        
         //public static List<ArrayList> MyWords = new List<ArrayList>();
@@ -26,9 +28,10 @@ namespace WordPuzzle
             {"ش","16"},{"ص","17"},{"ض","18"},{"ط","19"},{"ظ","20"},
             {"ع","21"},{"غ","22"},{"ف","23"},{"ق","24"},{"ک","25"},
             {"گ","26"},{"ل","27"},{"م","28"},{"ن","29"},{"و","30"},
-            {"ه","31"},{"ی","32"},
+            {"ه","31"},{"ی","32"},{"ي","32"},
             {"آ","1"}
         };
+        
 
         public static Dictionary<string, string> faDic = new Dictionary<string, string>()
         {
@@ -93,6 +96,7 @@ namespace WordPuzzle
             ArrayList myCode = new ArrayList();
             for (int i = 0; i < inputString.Length; i++)
             {
+                //Console.WriteLine(i.ToString());
                 myCode.Add(dic[inputString[i].ToString()]);
             }
 
@@ -202,10 +206,17 @@ namespace WordPuzzle
             }
             return result;
         }
+        private static void WriteFindedWordsInTable()
+
+        {
+            //SavePuzzleInDetail(List < ArrayList > wordsList, int[] puzzle, string fileSaveAddress);
+        }
+
         private static void StatToSolve()
         {
-            string inputFileName = @"E:\Project\ponisha\arman\testcase\testCare.txt"; //defult file
-          
+            
+            //string inputFileName = @"E:\Project\ponisha\arman\testcase\testCare.txt"; //defult file
+            string inputFileName = string.Empty;
             do
             {
                 Console.WriteLine("Please Enter address of input file( text file) ");
@@ -218,7 +229,7 @@ namespace WordPuzzle
             if (System.IO.File.Exists(saveFileName)) File.Delete(saveFileName);
            // StreamWriter writetext = new StreamWriter("write.txt",append:true);
             List<ArrayList> myWords2 = ReadFile(inputFileName);
-            myWords2.Clear();
+            //myWords2.Clear();
             RealGA myGa = new RealGA(myWords2);
             myGa.DoGA(saveFileName);
         }
@@ -239,12 +250,25 @@ namespace WordPuzzle
                 Console.WriteLine("Please enter one of the items");
                 Console.WriteLine("1- About");
                 Console.WriteLine("2- Change Parameters");
-                Console.WriteLine("3- Start Finding Soulotion ");
-                Console.WriteLine("5- Exit");
+                Console.WriteLine("3- Show Current Seetings ");
+                Console.WriteLine("4- Start Finding Soulotion ");
+                Console.WriteLine("5- Save puzzle  Base On current input text file ");
+                //Console.WriteLine("6- Save puzzle Basae On cusstum input text file ");
+                Console.WriteLine("6- Exit");
                 int.TryParse(Console.ReadLine(),out selectedIteminMenu);
-            } while (selectedIteminMenu > 5 && selectedIteminMenu < 0);
-            Console.WriteLine(selectedIteminMenu);
+            } while (selectedIteminMenu > 6 && selectedIteminMenu < 0);
+            //Console.WriteLine(selectedIteminMenu);
             return selectedIteminMenu;
+        }
+        private static void ShowCurrentSettings()
+        {
+            Console.WriteLine(string.Format(" Number Of Iterations = {0}",Properties.Settings.Default.maxIt));
+            Console.WriteLine(string.Format(" Number Of Pupulation = {0}", Properties.Settings.Default.nPop));
+            Console.WriteLine(string.Format(" precent Of cross Over = {0}", Properties.Settings.Default.pc));
+            Console.WriteLine(string.Format(" precent Of Mutation = {0}", Properties.Settings.Default.pm));
+            Console.WriteLine(string.Format(" intensity Of Mutation = {0}", Properties.Settings.Default.mu));
+            Console.WriteLine();
+
         }
         private static void ShowAbout()
         {
@@ -270,19 +294,143 @@ namespace WordPuzzle
                         break;
 
                     case 2:
+                        ChangeSetiitng();
                         break;
+
                     case 3:
+                        ShowCurrentSettings();
+                        break;
+
+                    case 4:
                         StatToSolve();
                         break;
-                    case 4:
+
+                    case 5:
+                        string inputFileName = string.Empty;
+                        do
+                        {
+                            Console.WriteLine("Please Enter address of input file( text file) ");
+                            inputFileName = Console.ReadLine();
+                        } while (!File.Exists(inputFileName));
+
+                        List<ArrayList> myWords3 = ReadFile(inputFileName);
+                        
+                        Console.WriteLine("Please enter your puzzle");
+                        int[] myPuzzl = { 1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+                        string rowpuzzle = Console.ReadLine();
+                        int count = 0; 
+
+                        foreach (string word in rowpuzzle.Split(' '))
+                        {
+                            count++;
+                            int.TryParse(word, out myPuzzl[count]);
+                            //myPuzzl[count]=
+                                
+                            //myCode.Add(dic[word.ToString()]);
+
+                        }
+                        string fileSaveAddress = "TableDesinge.txt";
+                        DetectWord.SavePuzzleInDetail(myWords3, myPuzzl,fileSaveAddress);
+
                         break;
-                       
-                    default:
+
+                    //case 6:
+                    //    //Console.WriteLine("No things");
+                    //    break;
+
+                    case 6:
                         Environment.Exit(0);
+                        break;
+                    default:
+                       
                         break;
                 }
 
             } while (wantToReDo);
+        }
+        private static void DefultSettings()
+        {
+            SaveSettings(500,400,.8,20,.01);
+        }
+        private static void SaveSettings(int maxIt,int nPop,double pc,double pm ,double mu)
+        {
+            Properties.Settings.Default.maxIt = maxIt;
+            Properties.Settings.Default.nPop = nPop;
+            Properties.Settings.Default.pc = pc;
+            Properties.Settings.Default.pm = pm;
+            Properties.Settings.Default.mu = .01;
+            Properties.Settings.Default.Save();
+    }
+        private static void ChangeSetiitng()
+        {
+            int settingSate=0;
+
+            do
+            {
+                Console.WriteLine("Select Of the Items");
+                Console.WriteLine("\t 1- Default Setting");
+                Console.WriteLine("\t 2- My Seetings");
+                int.TryParse(Console.ReadLine(), out settingSate);
+
+            } while (!(settingSate==1 || settingSate==2));
+            if (settingSate==1) DefultSettings();
+            if (settingSate == 2)
+            {
+                int myMaxIt,myNPop;
+                double myPc, myPm, myMu;
+               
+                //for max it
+                do
+                {
+                    Console.WriteLine("Pleease Enter Number Of Iterations (x>0 & x<2000 recommand= 500)");
+                    int.TryParse(Console.ReadLine(), out myMaxIt);
+                } while (myMaxIt<1 || myMaxIt>1500);
+
+
+                //for max nPop
+                do
+                {
+                    Console.WriteLine("Pleease Enter Number Of Pupulation (x>0 & x<800 recommand= 400)");
+                    int.TryParse(Console.ReadLine(), out myNPop);
+                } while (myNPop < 1 || myNPop > 800);
+
+                //for   pc
+                do
+                {
+                    Console.WriteLine("Pleease Enter precent Of cross Over (x>0 & x<1 recommand= .8)");
+                    double.TryParse(Console.ReadLine(), out myPc);
+                } while (myPc < 0 || myPc >1 );
+
+                //for  pm
+                do
+                {
+                    Console.WriteLine("Pleease Enter precent Of Mutation (x>0 & x<20 recommand= .1)");
+                    double.TryParse(Console.ReadLine(), out myPm);
+                } while (myPm < 0 || myPm > 20);
+
+
+                //for  mu	
+                
+                do
+                {
+                    Console.WriteLine("Pleease Enter intensity Of Mutation (x>0 & x<1 recommand= .01)");
+                   double.TryParse(Console.ReadLine(), out myMu);
+                } while (myMu < 0 || myMu > 1);
+
+                Console.WriteLine("Are You Sure?");
+                Console.WriteLine("\t 1-Yes");
+                Console.WriteLine("\t 2-No");
+                int saveResult = 0;
+                int.TryParse(Console.ReadLine(), out saveResult);
+
+                if (saveResult == 1) SaveSettings(myMaxIt, myNPop, myPc, myPm, myMu);
+
+                Console.WriteLine("save SuccessFuly");
+                Console.WriteLine();
+
+
+            }
+              
         }
         #endregion
         static void Main(string[] args)

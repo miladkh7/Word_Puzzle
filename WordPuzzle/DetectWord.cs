@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using WordPuzzle;
+using System.IO;
 namespace WordPuzzle
 {
    
@@ -31,6 +32,7 @@ namespace WordPuzzle
             wordFindIndex =0;
             usedPlaces.Clear();
             findedWord.Clear();
+           
             level = 1;
             domain.Clear();
 
@@ -39,6 +41,39 @@ namespace WordPuzzle
             domain.Add(9); domain.Add(10); domain.Add(11); domain.Add(12);
             domain.Add(13); domain.Add(14); domain.Add(15); domain.Add(16);
 
+        }
+        public static void SavePuzzleInDetail(List<ArrayList> wordsList, int[] puzzle, string fileSaveAddress)
+        {
+
+            using (StreamWriter resultPuzzle = new StreamWriter(fileSaveAddress))
+            {
+                foreach (var wordCode in wordsList)
+                {
+                    //findedWord = null;
+                    DetectWord mydetect = new DetectWord();
+                    DetectWord.ReadyToUse();
+                    bool isNowFind=FindCodeInPuzzle(wordCode, puzzle);
+                    if (!isNowFind) continue;
+                    //resultPuzzle.WriteLine(WordPuzzle.puzzle.Code2String(WordPuzzle.puzzle.FaCode2Word(WordPuzzle.puzzle.Code2String(wordCode), WordPuzzle.puzzle.faDic)));
+                    string wordCodeToPrint = string.Empty;
+                    string persionWord = string.Empty;
+                    foreach (var item in findedWord)
+                    {
+
+                        wordCodeToPrint += item;
+                        wordCodeToPrint += " ";
+                        persionWord += WordPuzzle.puzzle.faDic[puzzle[item].ToString()];
+                        //resultPuzzle.Write(item);
+                        //resultPuzzle.Write(" ");
+                    }
+                    resultPuzzle.WriteLine(persionWord);
+                    resultPuzzle.WriteLine(wordCodeToPrint);
+                    resultPuzzle.WriteLine();
+
+                }
+
+                //FindCodeInPuzzle
+            }
         }
         public static bool FindCodeInPuzzle(ArrayList wordCode,int[] puzzle)
         {
