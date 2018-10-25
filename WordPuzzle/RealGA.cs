@@ -72,8 +72,8 @@ namespace WordPuzzle
             }
             // childs= SingleCrossOver(People parent1, People parent2)
             
-            child[0].cost = puzzle.CalCostFunction(_tableWords, child[0].postion);
-            child[1].cost = puzzle.CalCostFunction(_tableWords, child[1].postion);
+            child[0].cost = DetectWord.CalCostFunction(_tableWords, child[0].postion);
+            child[1].cost = DetectWord.CalCostFunction(_tableWords, child[1].postion);
             return child;
 
         }
@@ -251,7 +251,7 @@ namespace WordPuzzle
                 }
 
                 myPeople.postion = postion;
-                myPeople.cost =puzzle.CalCostFunction(_tableWords, postion);
+                myPeople.cost = DetectWord.CalCostFunction(_tableWords, postion);
                 pop.Add(myPeople);
             }
             pop = pop.OrderBy(o => o.cost).ToList();
@@ -303,9 +303,11 @@ namespace WordPuzzle
 
                 // re order pop
                 newpop = newpop.OrderBy(o => o.cost).ToList();
+                pop.Clear();
                 pop = newpop;
                 worstCost = GetMax(worstCost, pop[pop.Count - 1].cost);
-                pop.RemoveRange(nPop, (int)(nm + nc));
+                
+                pop.RemoveRange(nPop+1, (int)(nm + nc));
                 bestSol = pop[0];
 //#ToDo: aval baresi konam agar fili bod pakesh konam
 

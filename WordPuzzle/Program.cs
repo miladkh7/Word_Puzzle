@@ -31,7 +31,7 @@ namespace WordPuzzle
             {"ه","31"},{"ی","32"},{"ي","32"},
             {"آ","1"}
         };
-        
+
 
         public static Dictionary<string, string> faDic = new Dictionary<string, string>()
         {
@@ -41,8 +41,18 @@ namespace WordPuzzle
             {"16","ش"},{"17","ص"},{"18","ض"},{"19","ط"},{"20","ظ"},
             {"21","ع"},{"22","غ"},{"23","ف"},{"24","ق"},{"25","ک"},
             {"26","گ"},{"27","ل"},{"28","م"},{"29","ن"},{"30","و"},
-            {"31","ه"},{"32","ی"},
+            {"31","ه"},{"32","ی"}
 
+        };
+        public static Dictionary<string, string> FinglishDic = new Dictionary<string, string>()
+        {
+            {"1","a"},{"2","b"},{"3","p"},{"4","t"},{"5","s"},
+            {"6","j"},{"7","ch"},{"8","h"},{"9","kh"},{"10","d"},
+            {"11","z"},{"12","r"},{"13","z"},{"14","zh"},{"15","s"},
+            {"16","sh"},{"17","s"},{"18","z"},{"19","t"},{"20","z"},
+            {"21","e"},{"22","gh"},{"23","f"},{"24","gh"},{"25","k"},
+            {"26","g"},{"27","l"},{"28","m"},{"29","n"},{"30","v"},
+            {"31","h"},{"32","ye"}
         };
 
         public static ArrayList FaCode2Word(string inputString, Dictionary<string, string> dic)
@@ -63,32 +73,32 @@ namespace WordPuzzle
             return myCode;
         }
         // this fucntion use to display string code
-        private static void DispCode(ArrayList codedString)
-        {
-            foreach (var item in codedString)
-            {
-                Console.WriteLine(item);
+        //private static void DispCode(ArrayList codedString)
+        //{
+        //    foreach (var item in codedString)
+        //    {
+        //        Console.WriteLine(item);
 
-            }
-            Console.WriteLine();
+        //    }
+        //    Console.WriteLine();
 
-        }
-        private static void DisplayAllWord(List<ArrayList> myWords)
-        {
-            foreach (var item in myWords)
-            {
-                foreach (var ch in item)
-                {
-                    Console.Write(ch);
-                    Console.Write(" ");
+        //}
+        //private static void DisplayAllWord(List<ArrayList> myWords)
+        //{
+        //    foreach (var item in myWords)
+        //    {
+        //        foreach (var ch in item)
+        //        {
+        //            Console.Write(ch);
+        //            Console.Write(" ");
 
-                }
-                Console.WriteLine();
-            } 
-        }
+        //        }
+        //        Console.WriteLine();
+        //    } 
+        //}
         public static void TestWord(string inputWord)
         {
-            DispCode(Word2Code(inputWord, puzzle.dic));
+           Show.DispCode(Word2Code(inputWord, puzzle.dic));
         }
 
         public static ArrayList Word2Code(string inputString, Dictionary<string, string> dic)
@@ -133,32 +143,32 @@ namespace WordPuzzle
                 Console.WriteLine(result.ToString());
             }
         }
-        public static int CalCostFunction(List<ArrayList> wordsList, int[] puzzle)
-        {
-            int mycoset = 100;
-            findedList.Clear();
-            foreach (ArrayList item in wordsList)
-            {
-                DetectWord mydetect = new DetectWord();
-                DetectWord.ReadyToUse();
-                if (puzzle == null)
-                {
-                    Console.WriteLine("puzzell is null");
-                }
-                bool result = DetectWord.FindCodeInPuzzle(item, puzzle);
-                if (result)
-                {
-                    mycoset--;
-                    findedWordInTable itemToAddInList = new findedWordInTable();
-                    itemToAddInList.wordCode = item;
-                    itemToAddInList.positions = DetectWord.findedWord;
-                    findedList.Add(itemToAddInList);
+        //public static int CalCostFunction(List<ArrayList> wordsList, int[] puzzle)
+        //{
+        //    int mycoset = 100;
+        //    findedList.Clear();
+        //    foreach (ArrayList item in wordsList)
+        //    {
+        //        DetectWord mydetect = new DetectWord();
+        //        DetectWord.ReadyToUse();
+        //        if (puzzle == null)
+        //        {
+        //            Console.WriteLine("puzzell is null");
+        //        }
+        //        bool result = DetectWord.FindCodeInPuzzle(item, puzzle);
+        //        if (result)
+        //        {
+        //            mycoset--;
+        //            findedWordInTable itemToAddInList = new findedWordInTable();
+        //            itemToAddInList.wordCode = item;
+        //            itemToAddInList.positions = DetectWord.findedWord;
+        //            findedList.Add(itemToAddInList);
 
-                }
+        //        }
                 
-            }
-            return mycoset;
-        }
+        //    }
+        //    return mycoset;
+        //}
         public string CodeToWord(ArrayList inputWordCode)
 
         {
@@ -435,13 +445,20 @@ namespace WordPuzzle
         #endregion
         static void Main(string[] args)
         {
+            #region testword
+            string inputWord = ("تلطیف");
+            int[] testPuzzle = { 0, 19, 27, 21, 27, 23, 15, 4, 32, 23, 12, 18, 29, 32, 12, 8, 3 };
+            DetectWord mydetected = new DetectWord();
+
+            bool result = DetectWord.FindCodeInPuzzle(Word2Code(inputWord, puzzle.dic), testPuzzle);
+            #endregion
             #region MyRegion
             // TestWord("نگخفرپاباشردگقعک");
-            // string inputWord = ("پرگار");
+            //string inputWord = ("تلطیف");
             //string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
             //string outputFileName= @"E:\Project\ponisha\arman\words1_final.txt";
             //StreamWriter writetext = new StreamWriter("write.txt");
-            // int[] testPuzzle = { 0,29, 26, 9 ,23, 12, 3, 1, 2, 1, 16, 12, 10, 26 ,24, 21, 25 };
+
             //List<ArrayList> myWords2=ReadFile(inputFileName);
             //  DisplayAllWord(myWords2);
             // Console.WriteLine("results");
@@ -473,8 +490,8 @@ namespace WordPuzzle
             #endregion
             //string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
             //string inputFileName = @"E:\Project\ponisha\arman\answers\answers5.txt";
-            ShowLogo();
-            Start();
+            //  ShowLogo();
+            //Start();
 
             //WriteFinalSolotionToFile(outputFileName);
             Console.Read();

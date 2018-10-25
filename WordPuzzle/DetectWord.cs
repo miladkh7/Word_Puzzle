@@ -25,6 +25,7 @@ namespace WordPuzzle
         public static List<int> findedWord = new List<int>();
         //public static ArrayList domain = new ArrayList();
         public static List<int> domain = new List<int>();
+        public static List<findedWordInTable> findedList = new List<findedWordInTable>();
         public static int currentPlace;
         public static void ReadyToUse()
         {
@@ -80,6 +81,7 @@ namespace WordPuzzle
             bool IsFind = false;
             if ( level== 1)
             {
+                
                 ReadyToUse();
             }
             else
@@ -167,7 +169,32 @@ namespace WordPuzzle
                
             }
         }
+        public static int CalCostFunction(List<ArrayList> wordsList, int[] puzzle)
+        {
+            int mycoset = 100;
+            findedList.Clear();
+            foreach (ArrayList item in wordsList)
+            {
+                DetectWord mydetect = new DetectWord();
+                DetectWord.ReadyToUse();
+                if (puzzle == null)
+                {
+                    Console.WriteLine("puzzell is null");
+                }
+                bool result = DetectWord.FindCodeInPuzzle(item, puzzle);
+                if (result)
+                {
+                    mycoset--;
+                    findedWordInTable itemToAddInList = new findedWordInTable();
+                    itemToAddInList.wordCode = item;
+                    itemToAddInList.positions = DetectWord.findedWord;
+                    findedList.Add(itemToAddInList);
 
+                }
+
+            }
+            return mycoset;
+        }
         public  DetectWord()
         {
             InitilizeNeighbors();
