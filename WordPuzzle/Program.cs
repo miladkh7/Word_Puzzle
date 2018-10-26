@@ -139,6 +139,7 @@ namespace WordPuzzle
                 {
                     Console.WriteLine("puzzell is null");
                 }
+                
                 bool result=DetectWord.FindCodeInPuzzle(item, puzzle);
                 Console.WriteLine(result.ToString());
             }
@@ -340,6 +341,7 @@ namespace WordPuzzle
 
                         }
                         string fileSaveAddress = "TableDesinge.txt";
+                        DetectWord.SaveCode2Word(myPuzzl, fileSaveAddress);
                         DetectWord.SavePuzzleInDetail(myWords3, myPuzzl,fileSaveAddress);
 
                         break;
@@ -446,11 +448,12 @@ namespace WordPuzzle
         static void Main(string[] args)
         {
             #region testword
-            string inputWord = ("تلطیف");
-            int[] testPuzzle = { 0, 19, 27, 21, 27, 23, 15, 4, 32, 23, 12, 18, 29, 32, 12, 8, 3 };
-            DetectWord mydetected = new DetectWord();
+            //string inputWord = ("نحریر");
+            ////string inputWord = ("تلطیف");
+            //int[] testPuzzle = { 0, 19, 27, 21, 27, 23, 15, 4, 32, 23, 12, 18, 29, 32, 12, 8, 3 };
+            //DetectWord mydetected = new DetectWord();
 
-            bool result = DetectWord.FindCodeInPuzzle(Word2Code(inputWord, puzzle.dic), testPuzzle);
+            //bool result = DetectWord.FindCodeInPuzzle(Word2Code(inputWord, puzzle.dic), testPuzzle);
             #endregion
             #region MyRegion
             // TestWord("نگخفرپاباشردگقعک");
@@ -490,8 +493,8 @@ namespace WordPuzzle
             #endregion
             //string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
             //string inputFileName = @"E:\Project\ponisha\arman\answers\answers5.txt";
-            //  ShowLogo();
-            //Start();
+             ShowLogo();
+            Start();
 
             //WriteFinalSolotionToFile(outputFileName);
             Console.Read();
