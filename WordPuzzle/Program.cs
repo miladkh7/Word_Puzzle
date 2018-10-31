@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.IO;
+using WordPuzzleDll;
 namespace WordPuzzle
 {
     public struct findedWordInTable
@@ -242,7 +243,13 @@ namespace WordPuzzle
             List<ArrayList> myWords2 = ReadFile(inputFileName);
             List<int> Myleters = DetectWord.ColectAllUniqLeters(myWords2);
             //myWords2.Clear();
-            RealGA myGa = new RealGA(myWords2, Myleters);
+            int maxIt = Properties.Settings.Default.maxIt;
+             int nPop = Properties.Settings.Default.nPop;
+             double pc = Properties.Settings.Default.pc;
+             double pm = Properties.Settings.Default.pm;
+            double mu = Properties.Settings.Default.mu;
+            
+            RealGA myGa = new RealGA(myWords2, Myleters, maxIt, nPop, pc, pm, mu);
             myGa.DoGA(saveFileName);
         }
         private static void ShowLogo()

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.IO;
-namespace WordPuzzle
+namespace WordPuzzleDll
 {
     
     public struct People
@@ -15,7 +15,7 @@ namespace WordPuzzle
     }
     
     
-    class RealGA
+   public class RealGA
     {
       //  public People[] childs = new People[1];
         
@@ -293,7 +293,7 @@ namespace WordPuzzle
             return result;
         }
         public void DoGA(string saveFileName)
-        {
+        {   
             Console.WriteLine(Properties.Settings.Default.nPop.ToString());
             People myPeople = new People();
             //first Generation
@@ -407,17 +407,17 @@ namespace WordPuzzle
         {
             return first > second ? first : second;
         }
-        public RealGA(List<ArrayList> words,List<int> characters)
+        public RealGA(List<ArrayList> words,List<int> characters,int mymaxIt,int mynPop,double mypc,double mypm,double mymu)
         {
             //load Seetins
             _tableWords = words;
             _allowedCharacters = characters;
-            maxIt = Properties.Settings.Default.maxIt;
-            nPop = Properties.Settings.Default.nPop;
-            pc = Properties.Settings.Default.pc;
-            pm = Properties.Settings.Default.pm;
-            mu = Properties.Settings.Default.mu;
             MulticastDelegate = .8;
+            maxIt = mymaxIt;
+            nPop = mynPop;
+            pc = mypc;
+            pm = mypm;
+            mu = mymu;
             beta = 8;
             nm = Math.Round(pm * nPop);
             nc = 2 * (int)Math.Round(pc * nPop / 2);

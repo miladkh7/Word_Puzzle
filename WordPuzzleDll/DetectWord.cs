@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 using System.Collections;
 using WordPuzzle;
 using System.IO;
-namespace WordPuzzle
+using WordPuzzleDll;
+
+
+namespace WordPuzzleDll
 {
+    public struct findedWordInTable
+    {
+        public ArrayList wordCode;
+        public List<int> positions;
+    }
     public class Find
     {
         static cell[] cells = new cell[17];
@@ -41,6 +49,7 @@ namespace WordPuzzle
         {
             InitilizeNeighbors();
         }
+
         public bool FindCodeInPuzzle(ArrayList wordCode, int[] puzzle, List<int> myDomain, List<int> usedPlaces)
         {
            
@@ -152,6 +161,7 @@ namespace WordPuzzle
         public static List<int> domain = new List<int>();
         public static List<findedWordInTable> findedList = new List<findedWordInTable>();
         public static int currentPlace;
+
         public static void ReadyToUse()
         {
             currentPlace = 0;
@@ -168,6 +178,17 @@ namespace WordPuzzle
             domain.Add(13); domain.Add(14); domain.Add(15); domain.Add(16);
 
         }
+        public static Dictionary<string, string> faDic = new Dictionary<string, string>()
+        {
+            {"1","ا"},{"2","ب"},{"3","پ"},{"4","ت"},{"5","ث"},
+            {"6","ج"},{"7","چ"},{"8","ح"},{"9","خ"},{"10","د"},
+            {"11","ذ"},{"12","ر"},{"13","ز"},{"14","ژ"},{"15","س"},
+            {"16","ش"},{"17","ص"},{"18","ض"},{"19","ط"},{"20","ظ"},
+            {"21","ع"},{"22","غ"},{"23","ف"},{"24","ق"},{"25","ک"},
+            {"26","گ"},{"27","ل"},{"28","م"},{"29","ن"},{"30","و"},
+            {"31","ه"},{"32","ی"}
+
+        };
         public static List<int> ColectAllUniqLeters(List<ArrayList> wordsCode)
         {
             List<int> myAllLeters = new List<int>();
@@ -189,7 +210,7 @@ namespace WordPuzzle
                 {
                     for (int j = 0; j <4; j++)
                     {
-                        tableWirte.Write(WordPuzzle.puzzle.faDic[ puzzle[k].ToString()].ToString());
+                        tableWirte.Write(faDic[ puzzle[k].ToString()].ToString());
                         tableWirte.Write("   ");
                         k++;
                     }
@@ -210,7 +231,7 @@ namespace WordPuzzle
                 {
                     for (int j = 0; j < 4; j++)
                     {
-                        resultPuzzle.Write(WordPuzzle.puzzle.faDic[puzzle[k].ToString()].ToString());
+                        resultPuzzle.Write(faDic[puzzle[k].ToString()].ToString());
                         resultPuzzle.Write("   ");
                         k++;
                     }
@@ -234,7 +255,8 @@ namespace WordPuzzle
 
                         wordCodeToPrint += item;
                         wordCodeToPrint += " ";
-                        persionWord += WordPuzzle.puzzle.faDic[puzzle[item].ToString()];
+                        
+                        persionWord += faDic[puzzle[item].ToString()];
                         //resultPuzzle.Write(item);
                         //resultPuzzle.Write(" ");
                     }
