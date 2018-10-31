@@ -29,6 +29,8 @@ namespace WordPuzzle
         public static double beta = 8;
         public static double nm = Math.Round(pm * nPop);
         public static int nc = 2* (int)Math.Round(pc * nPop / 2);
+        static int []numbersArray = new int[] { 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33};
+       
         public People bestSol;
 
 
@@ -38,7 +40,61 @@ namespace WordPuzzle
         public List<People> popc = new List<People>();
         public List<People> popm = new List<People>();
         private List<ArrayList> _tableWords;
+        private List<int> _allowedCharacters;
         private int worstCost;
+        
+        public static int[] Shuffle( int[] array)
+        {
+            Random rng = new Random();
+            int n = array.Length;
+            while (n > 1)
+            {
+                int k = rng.Next(n--);
+                int temp = array[n];
+                array[n] = array[k];
+                array[k] = temp;
+            }
+            return array;
+        }
+        public static int[] CreateRandomString(List<int> myAllowedCharacters)
+        {
+            int[] myRandomString = new int[17];
+            int[] myRandomIndex = new int[17];
+            int randomIndex;
+            
+            Random rnd = new Random();
+            myRandomString[0] = 0;
+            int[] ShuffleIndex=Shuffle(numbersArray);
+            int j = 0;
+            //rand perm
+            for (int i = 1; i < 17; i++)
+            {
+                do
+                {
+                    randomIndex = ShuffleIndex[j];
+                    j++;
+                //} while (!myAllowedCharacters.Contains(randomIndex));//(randomIndex > 16);
+            } while (randomIndex > 16);
+                //myRandomString[i] = randomNumber;
+                myRandomIndex[i] = randomIndex;
+                //myRandomString[i]=
+                // Console.Write(myRandomString[i].ToString());
+                //   Console.Write(" ");
+            }
+            for (int i = 1; i < 17; i++)
+            {
+                int currentIndex= myRandomIndex[i];
+                if (currentIndex >= myAllowedCharacters.Count)
+                {
+                    
+                    currentIndex = rnd.Next(0, myAllowedCharacters.Count - 1);
+                    //myRandomString[i] = myAllowedCharacters[myRandomIndex[i] - 1];
+                }
+                myRandomString[i] = myAllowedCharacters[currentIndex];
+            }
+            return myRandomString;
+
+        }
         public static int[] CreateRandomString()
         {
             int[] myRandomString = new int[17];
@@ -244,7 +300,7 @@ namespace WordPuzzle
             for (int i = 1; i <= nPop; i++)
             {
                 
-                int[] postion=CreateRandomString();
+                int[] postion=CreateRandomString(_allowedCharacters);
                 if (postion.Length == 16)
                 {
                     Console.WriteLine("error on length");
@@ -351,10 +407,11 @@ namespace WordPuzzle
         {
             return first > second ? first : second;
         }
-        public RealGA(List<ArrayList> words)
+        public RealGA(List<ArrayList> words,List<int> characters)
         {
             //load Seetins
             _tableWords = words;
+            _allowedCharacters = characters;
             maxIt = Properties.Settings.Default.maxIt;
             nPop = Properties.Settings.Default.nPop;
             pc = Properties.Settings.Default.pc;

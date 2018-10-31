@@ -168,6 +168,18 @@ namespace WordPuzzle
             domain.Add(13); domain.Add(14); domain.Add(15); domain.Add(16);
 
         }
+        public static List<int> ColectAllUniqLeters(List<ArrayList> wordsCode)
+        {
+            List<int> myAllLeters = new List<int>();
+            foreach (var word in wordsCode)
+            {
+                foreach (string item in word)
+                {
+                    if (!myAllLeters.Contains(Convert.ToInt32(item))) myAllLeters.Add( Convert.ToInt32(item));
+                }
+            }
+            return myAllLeters; 
+        }
         public static void SaveCode2Word(int[] puzzle, string fileSaveAddress)
         {
             using (StreamWriter tableWirte = new StreamWriter(fileSaveAddress))

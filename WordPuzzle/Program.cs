@@ -240,8 +240,9 @@ namespace WordPuzzle
             if (System.IO.File.Exists(saveFileName)) File.Delete(saveFileName);
            // StreamWriter writetext = new StreamWriter("write.txt",append:true);
             List<ArrayList> myWords2 = ReadFile(inputFileName);
+            List<int> Myleters = DetectWord.ColectAllUniqLeters(myWords2);
             //myWords2.Clear();
-            RealGA myGa = new RealGA(myWords2);
+            RealGA myGa = new RealGA(myWords2, Myleters);
             myGa.DoGA(saveFileName);
         }
         private static void ShowLogo()
@@ -284,7 +285,7 @@ namespace WordPuzzle
         private static void ShowAbout()
         {
             Console.WriteLine();
-            Console.WriteLine("this program use an input text file to create  puzzle table that contain maximum word");
+            Console.WriteLine("this program use an input text file to create  puzzle table that contain maximum word :)");
             Console.WriteLine();
             Console.WriteLine("Author : Milad Khaleghi");
             Console.WriteLine("\t 0935 299 7106");
