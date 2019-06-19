@@ -18,9 +18,6 @@ namespace WordPuzzle
     {
         public static string  inputFileName;
         public static List<findedWordInTable> findedList = new List<findedWordInTable>();
-       
-        //public static List<ArrayList> MyWords = new List<ArrayList>();
-        // it cant be a character Bcuz some of the code have 2 digit
         public static Dictionary<string, string> dic = new Dictionary<string, string>()
         {
             {"ا","1"},{"ب","2"},{"پ","3"},{"ت","4"},{"ث","5"},
@@ -64,39 +61,9 @@ namespace WordPuzzle
             {
                 myCode.Add(dic[word.ToString()]);
             }
-
-
-            //for (int i = 0; i < inputString.Length; i++)
-            //{
-            //    myCode.Add(dic[inputString[i].ToString()]);
-            //}
-
             return myCode;
         }
-        // this fucntion use to display string code
-        //private static void DispCode(ArrayList codedString)
-        //{
-        //    foreach (var item in codedString)
-        //    {
-        //        Console.WriteLine(item);
 
-        //    }
-        //    Console.WriteLine();
-
-        //}
-        //private static void DisplayAllWord(List<ArrayList> myWords)
-        //{
-        //    foreach (var item in myWords)
-        //    {
-        //        foreach (var ch in item)
-        //        {
-        //            Console.Write(ch);
-        //            Console.Write(" ");
-
-        //        }
-        //        Console.WriteLine();
-        //    } 
-        //}
         public static void TestWord(string inputWord)
         {
            Show.DispCode(Word2Code(inputWord, puzzle.dic));
@@ -124,8 +91,6 @@ namespace WordPuzzle
             {
                 MyWords2.Add( Word2Code(line, dic));
 
-                // Do stuff with your line here, it will be called for each 
-                // line of text in your file.
             }
             return MyWords2;
         }
@@ -145,42 +110,7 @@ namespace WordPuzzle
                 Console.WriteLine(result.ToString());
             }
         }
-        //public static int CalCostFunction(List<ArrayList> wordsList, int[] puzzle)
-        //{
-        //    int mycoset = 100;
-        //    findedList.Clear();
-        //    foreach (ArrayList item in wordsList)
-        //    {
-        //        DetectWord mydetect = new DetectWord();
-        //        DetectWord.ReadyToUse();
-        //        if (puzzle == null)
-        //        {
-        //            Console.WriteLine("puzzell is null");
-        //        }
-        //        bool result = DetectWord.FindCodeInPuzzle(item, puzzle);
-        //        if (result)
-        //        {
-        //            mycoset--;
-        //            findedWordInTable itemToAddInList = new findedWordInTable();
-        //            itemToAddInList.wordCode = item;
-        //            itemToAddInList.positions = DetectWord.findedWord;
-        //            findedList.Add(itemToAddInList);
 
-        //        }
-                
-        //    }
-        //    return mycoset;
-        //}
-        public string CodeToWord(ArrayList inputWordCode)
-
-        {
-            string outputWord=null;
-            foreach (var item in inputWordCode)
-            {
-                //outputWord += dic2[item.ToString()].ToString();
-            }
-            return outputWord;
-        }
         public static string LocationToString(List<int> locaions)
 
         {
@@ -199,11 +129,8 @@ namespace WordPuzzle
                 string toBePrint = null;
                 foreach (var item in findedList)
                 {
-                    //FaCode2Word(item.wordCode, faDic)
-                    
                     
                     toBePrint = Code2String(FaCode2Word(Code2String(item.wordCode), faDic))+ " " + LocationToString(item.positions);
-                    //Console.WriteLine(toBePrint);
                     writetext.WriteLine(toBePrint);
                 }
             }
@@ -218,16 +145,10 @@ namespace WordPuzzle
             }
             return result;
         }
-        private static void WriteFindedWordsInTable()
-
-        {
-            //SavePuzzleInDetail(List < ArrayList > wordsList, int[] puzzle, string fileSaveAddress);
-        }
 
         private static void StatToSolve()
         {
             
-            //string inputFileName = @"E:\Project\ponisha\arman\testcase\testCare.txt"; //defult file
             string inputFileName = string.Empty;
             do
             {
@@ -239,14 +160,13 @@ namespace WordPuzzle
             string outputFileName = @"E:\Project\ponisha\arman\words1_final22.txt";
             string saveFileName = "word1.txt";
             if (System.IO.File.Exists(saveFileName)) File.Delete(saveFileName);
-           // StreamWriter writetext = new StreamWriter("write.txt",append:true);
             List<ArrayList> myWords2 = ReadFile(inputFileName);
             List<int> Myleters = DetectWord.ColectAllUniqLeters(myWords2);
-            //myWords2.Clear();
+
             int maxIt = Properties.Settings.Default.maxIt;
-             int nPop = Properties.Settings.Default.nPop;
-             double pc = Properties.Settings.Default.pc;
-             double pm = Properties.Settings.Default.pm;
+            int nPop = Properties.Settings.Default.nPop;
+            double pc = Properties.Settings.Default.pc;
+            double pm = Properties.Settings.Default.pm;
             double mu = Properties.Settings.Default.mu;
             
             RealGA myGa = new RealGA(myWords2, Myleters, maxIt, nPop, pc, pm, mu);
@@ -271,12 +191,11 @@ namespace WordPuzzle
                 Console.WriteLine("2- Change Parameters");
                 Console.WriteLine("3- Show Current Seetings ");
                 Console.WriteLine("4- Start Finding Soulotion ");
-                Console.WriteLine("5- Save puzzle  Base On current input text file ");
-                //Console.WriteLine("6- Save puzzle Basae On cusstum input text file ");
+                Console.WriteLine("5- Save puzzle Basae On cusstum input text file ");
                 Console.WriteLine("6- Exit");
                 int.TryParse(Console.ReadLine(),out selectedIteminMenu);
             } while (selectedIteminMenu > 6 && selectedIteminMenu < 0);
-            //Console.WriteLine(selectedIteminMenu);
+         
             return selectedIteminMenu;
         }
         private static void ShowCurrentSettings()
@@ -343,9 +262,6 @@ namespace WordPuzzle
                         {
                             count++;
                             int.TryParse(word, out myPuzzl[count]);
-                            //myPuzzl[count]=
-                                
-                            //myCode.Add(dic[word.ToString()]);
 
                         }
                         string fileSaveAddress = "TableDesinge.txt";
@@ -353,10 +269,6 @@ namespace WordPuzzle
                         DetectWord.SavePuzzleInDetail(myWords3, myPuzzl,fileSaveAddress);
 
                         break;
-
-                    //case 6:
-                    //    //Console.WriteLine("No things");
-                    //    break;
 
                     case 6:
                         Environment.Exit(0);
@@ -455,56 +367,9 @@ namespace WordPuzzle
         #endregion
         static void Main(string[] args)
         {
-            #region testword
-            //string inputWord = ("نحریر");
-            ////string inputWord = ("تلطیف");
-            //int[] testPuzzle = { 0, 19, 27, 21, 27, 23, 15, 4, 32, 23, 12, 18, 29, 32, 12, 8, 3 };
-            //DetectWord mydetected = new DetectWord();
 
-            //bool result = DetectWord.FindCodeInPuzzle(Word2Code(inputWord, puzzle.dic), testPuzzle);
-            #endregion
-            #region MyRegion
-            // TestWord("نگخفرپاباشردگقعک");
-            //string inputWord = ("تلطیف");
-            //string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
-            //string outputFileName= @"E:\Project\ponisha\arman\words1_final.txt";
-            //StreamWriter writetext = new StreamWriter("write.txt");
-
-            //List<ArrayList> myWords2=ReadFile(inputFileName);
-            //  DisplayAllWord(myWords2);
-            // Console.WriteLine("results");
-            // FindListInPuzzle(myWords2, testPuzzle);
-            // Console.WriteLine("emteiz");
-            // Console.WriteLine(CalCostFunction(myWords2, testPuzzle).ToString()); 
-            //// DisplayAllWord(myWords2);
-            // Console.Read();
-
-            //DetectWord mydetect = new DetectWord();
-            //mydetect.
-
-            //DetectWord mydetect = new DetectWord();
-            //Console.WriteLine("start from here");
-            //bool result=DetectWord.FindCodeInPuzzle(Word2Code(inputWord, puzzle.dic), mydetect.InitilizeSamplePuzzle());
-            //Console.WriteLine(result.ToString());
-            //foreach (var item in DetectWord.findedWord)
-            //{
-            //    Console.Write(item.ToString());
-            //    Console.Write(" ");
-            //}
-            //Console.WriteLine();
-            //Console.Read();
-            #endregion
-
-            #region Ga Test
-            //RealGA.CreateRandomString().ToString();
-            //Console.Read();
-            #endregion
-            //string inputFileName = @"E:\Project\ponisha\arman\words1.txt";
-            //string inputFileName = @"E:\Project\ponisha\arman\answers\answers5.txt";
-             ShowLogo();
+            ShowLogo();
             Start();
-
-            //WriteFinalSolotionToFile(outputFileName);
             Console.Read();
 
         }
